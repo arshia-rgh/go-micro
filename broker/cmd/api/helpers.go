@@ -60,3 +60,18 @@ func (app *Config) writeJSON(w http.ResponseWriter, status int, data any, header
 
 	return nil
 }
+
+func (app *Config) errorJSON(w http.ResponseWriter, error error, status ...int) error {
+	statusCode := http.StatusBadRequest
+
+	if len(status) > 0 {
+		statusCode = status[0]
+	}
+	var payload jsonResponse
+
+	payload.Error = true
+	payload.Message = error.Error()
+
+	return app.writeJSON(w, statusCode, payload)
+
+}

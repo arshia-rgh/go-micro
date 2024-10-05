@@ -14,7 +14,7 @@ type jsonResponse struct {
 }
 
 func (app *Config) readJSON(w http.ResponseWriter, r *http.Request, data any) error {
-	const maxBytes = 1048576
+	const maxBytes = 1048576 // 1 Megabyte
 
 	r.Body = http.MaxBytesReader(w, r.Body, int64(maxBytes))
 
@@ -26,6 +26,7 @@ func (app *Config) readJSON(w http.ResponseWriter, r *http.Request, data any) er
 		return err
 	}
 
+	// check if there is two JSON values
 	err = dec.Decode(&struct{}{})
 
 	if err != io.EOF {

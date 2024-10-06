@@ -50,7 +50,16 @@ func (u *User) GetAll() ([]*User, error) {
 	for rows.Next() {
 		var user User
 
-		err = rows.Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.Password, &user.Active, &user.CreatedAt, &user.UpdatedAt)
+		err = rows.Scan(
+			&user.ID,
+			&user.Email,
+			&user.FirstName,
+			&user.LastName,
+			&user.Password,
+			&user.Active,
+			&user.CreatedAt,
+			&user.UpdatedAt,
+		)
 		if err != nil {
 			return nil, err
 		}
@@ -72,7 +81,16 @@ func (u *User) GetByEmail(email string) (*User, error) {
 	row := db.QueryRowContext(ctx, query, email)
 	var user User
 
-	err := row.Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.Password, &user.Active, &user.CreatedAt, &user.UpdatedAt)
+	err := row.Scan(
+		&user.ID,
+		&user.Email,
+		&user.FirstName,
+		&user.LastName,
+		&user.Password,
+		&user.Active,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
 	if err != nil {
 		return nil, err
 	}

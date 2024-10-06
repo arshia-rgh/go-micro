@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+var dbTimeout = time.Second * 3
 var db *sql.DB
 
 type Models struct {

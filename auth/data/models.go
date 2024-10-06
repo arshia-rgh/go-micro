@@ -61,3 +61,7 @@ func (u *User) GetAll() ([]*User, error) {
 	return users, err
 
 }
+
+func (u *User) GetByEmail(email string) {
+
+}

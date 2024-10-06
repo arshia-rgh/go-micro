@@ -98,3 +98,31 @@ func (u *User) GetByEmail(email string) (*User, error) {
 	return &user, err
 
 }
+
+func (u *User) GetById(id int) (*User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+
+	defer cancel()
+
+	query := `SELECT * FROM users WHERE id = ?`
+
+	row := db.QueryRowContext(ctx, query, id)
+
+	var user User
+
+	err := row.Scan(
+		&user.ID,
+		&user.Email,
+		&user.FirstName,
+		&user.LastName,
+		&user.Password,
+		&user.Active,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, err
+}

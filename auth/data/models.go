@@ -1,6 +1,7 @@
 package data
 
 import (
+	"context"
 	"database/sql"
 	"time"
 )
@@ -31,5 +32,32 @@ func New(dbPool *sql.DB) Models {
 }
 
 func (u *User) GetAll() ([]*User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+
+	defer cancel()
+
+	query := `SELECT * FROM users order by last_name`
+
+	rows, err := db.QueryContext(ctx, query)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var users []*User
+	for rows.Next() {
+		var user User
+
+		err = rows.Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.Password, &user.Active, &user.CreatedAt, &user.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, &user)
+	}
+
+	return users, err
 
 }

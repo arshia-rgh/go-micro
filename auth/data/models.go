@@ -6,7 +6,8 @@ import (
 	"time"
 )
 
-var dbTimeout = time.Second * 3
+const dbTimeout = time.Second * 3
+
 var db *sql.DB
 
 type Models struct {
@@ -125,4 +126,23 @@ func (u *User) GetById(id int) (*User, error) {
 	}
 
 	return &user, err
+}
+
+func (u *User) Update() error {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+
+	defer cancel()
+
+	query := `UPDATE users SET 
+                 email = ?,
+                 first_name = ?,
+                 last_name = ?,
+                 user_active = ?,
+                 updated_at = ?
+             where id = ?
+             `
+
+	_, err := db.ExecContext(ctx, query, u.Email, u.FirstName, u.LastName, u.Active, u.UpdatedAt)
+
+	return err
 }

@@ -1,10 +1,14 @@
 package main
 
+import "database/sql"
+
 const webPort = "8080"
 
-type Config struct{}
+type Config struct {
+	DB *sql.DB
+}
 
 func main() {
-	app := Config{}
+	//app := Config{}
 
 }

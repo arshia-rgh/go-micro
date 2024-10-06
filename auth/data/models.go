@@ -28,3 +28,7 @@ func New(dbPool *sql.DB) Models {
 	return Models{User: User{}}
 
 }
+
+func (u *User) GetAll() ([]*User, error) {
+
+}

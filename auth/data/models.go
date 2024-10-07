@@ -209,3 +209,21 @@ func (u *User) Insert() (int, error) {
 
 	return newID, err
 }
+
+func (u *User) ChangePassword(password string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+
+	defer cancel()
+
+	hashedPass, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	if err != nil {
+		return err
+	}
+
+	query := `UPDATE users SET password = ? where id = ?`
+
+	_, err = db.ExecContext(ctx, query, hashedPass, u.ID)
+
+	return err
+
+}

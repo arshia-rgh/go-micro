@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"database/sql"
+	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
@@ -142,7 +143,14 @@ func (u *User) Update() error {
              where id = ?
              `
 
-	_, err := db.ExecContext(ctx, query, u.Email, u.FirstName, u.LastName, u.Active, u.UpdatedAt)
+	_, err := db.ExecContext(ctx, query,
+		u.Email,
+		u.FirstName,
+		u.LastName,
+		u.Active,
+		time.Now(),
+		u.ID,
+	)
 
 	return err
 }
@@ -171,4 +179,33 @@ func (u *User) DeleteById(id int) error {
 	_, err := db.ExecContext(ctx, query, id)
 
 	return err
+}
+
+func (u *User) Insert() (int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+
+	defer cancel()
+
+	hashedPass, err := bcrypt.GenerateFromPassword([]byte(u.Password), 14)
+	if err != nil {
+		return 0, err
+	}
+
+	query := `INSERT INTO users (email, first_name, last_name, password, user_active, created_at, updated_at)
+		VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id`
+
+	var newID int
+	row := db.QueryRowContext(ctx, query,
+		u.Email,
+		u.FirstName,
+		u.LastName,
+		hashedPass,
+		u.Active,
+		time.Now(),
+		time.Now(),
+	)
+
+	err = row.Scan(&newID)
+
+	return newID, err
 }

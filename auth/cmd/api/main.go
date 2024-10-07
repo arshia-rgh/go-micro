@@ -26,6 +26,10 @@ func main() {
 
 	db := connectToDB()
 
+	if db == nil {
+		log.Panic("can not connect to the DB")
+	}
+
 	models := data.New(db)
 
 	app := Config{

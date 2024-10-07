@@ -23,22 +23,9 @@ type Config struct {
 
 func main() {
 	log.Println("Starting authentication service")
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Could not load the env file: %v", err)
-		return
-	}
-	dbUser := os.Getenv("dbUser")
-	dbPassword := os.Getenv("dbPassword")
-	dbHost := os.Getenv("dbHost")
-	dbPort := os.Getenv("dbPort")
-	dbName := os.Getenv("dbName")
-	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPassword, dbHost, dbPort, dbName)
 
-	db, err := sql.Open("postgres", dsn)
-	if err != nil {
-		log.Panicf("Could not connect to the DB: %v", err)
-	}
+	db := connectToDB()
+
 	models := data.New(db)
 
 	app := Config{
@@ -51,7 +38,7 @@ func main() {
 		Handler: app.routes(),
 	}
 
-	err = srv.ListenAndServe()
+	err := srv.ListenAndServe()
 	if err != nil {
 		log.Panic(err)
 	}

@@ -9,9 +9,12 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 const webPort = "8080"
+
+var counts int64
 
 type Config struct {
 	DB     *sql.DB
@@ -61,4 +64,39 @@ func openDB(dsn string) (*sql.DB, error) {
 	}
 
 	return db, nil
+}
+
+func connectToDB() *sql.DB {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Could not load the env file: %v", err)
+		return nil
+	}
+	dbUser := os.Getenv("dbUser")
+	dbPassword := os.Getenv("dbPassword")
+	dbHost := os.Getenv("dbHost")
+	dbPort := os.Getenv("dbPort")
+	dbName := os.Getenv("dbName")
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPassword, dbHost, dbPort, dbName)
+
+	for {
+		connection, err := openDB(dsn)
+
+		if err != nil {
+			log.Println("Postgres not yet ready ...")
+			counts++
+		} else {
+			log.Println("Connected to Postgres !")
+			return connection
+		}
+
+		if counts > 10 {
+			log.Println(err)
+			return nil
+		}
+
+		log.Println("Try again in two seconds ...")
+		time.Sleep(2 * time.Second)
+
+	}
 }

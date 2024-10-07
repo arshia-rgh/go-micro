@@ -32,9 +32,16 @@ func main() {
 	dbName := os.Getenv("dbName")
 	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPassword, dbHost, dbPort, dbName)
 
-	sql.Open("postgres", dsn)
+	db, err := sql.Open("postgres", dsn)
+	if err != nil {
+		log.Panicf("Could not connect to the DB: %v", err)
+	}
+	models := data.New(db)
 
-	app := Config{}
+	app := Config{
+		DB:     db,
+		Models: models,
+	}
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%v", webPort),

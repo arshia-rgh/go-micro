@@ -161,6 +161,14 @@ func (u *User) Delete() error {
 }
 
 // DeleteById delete by the user id
-func (u *User) DeleteById(id int) {
+func (u *User) DeleteById(id int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 
+	defer cancel()
+
+	query := `DELETE FROM users WHERE id = ?`
+
+	_, err := db.ExecContext(ctx, query, id)
+
+	return err
 }

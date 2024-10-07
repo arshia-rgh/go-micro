@@ -146,3 +146,13 @@ func (u *User) Update() error {
 
 	return err
 }
+
+// Delete delete by User.ID
+func (u *User) Delete() {
+
+}
+
+// DeleteById delete by the user id
+func (u *User) DeleteById(id int) {
+
+}

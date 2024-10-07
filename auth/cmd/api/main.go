@@ -4,8 +4,11 @@ import (
 	"authentication/data"
 	"database/sql"
 	"fmt"
+	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 	"log"
 	"net/http"
+	"os"
 )
 
 const webPort = "8080"
@@ -17,6 +20,19 @@ type Config struct {
 
 func main() {
 	log.Println("Starting authentication service")
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Could not load the env file: %v", err)
+		return
+	}
+	dbUser := os.Getenv("dbUser")
+	dbPassword := os.Getenv("dbPassword")
+	dbHost := os.Getenv("dbHost")
+	dbPort := os.Getenv("dbPort")
+	dbName := os.Getenv("dbName")
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPassword, dbHost, dbPort, dbName)
+
+	sql.Open("postgres", dsn)
 
 	app := Config{}
 

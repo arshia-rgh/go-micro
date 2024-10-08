@@ -9,3 +9,14 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+
+  postgres:
+    image: "postgres:latest"
+    ports:
+      - "5432:5432"
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    env_file:
+      - auth/.env

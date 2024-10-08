@@ -63,11 +63,11 @@ func connectToDB() *sql.DB {
 		log.Fatalf("Could not load the env file: %v", err)
 		return nil
 	}
-	dbUser := os.Getenv("dbUser")
-	dbPassword := os.Getenv("dbPassword")
-	dbHost := os.Getenv("dbHost")
-	dbPort := os.Getenv("dbPort")
-	dbName := os.Getenv("dbName")
+	dbUser := os.Getenv("POSTGRES_USER")
+	dbPassword := os.Getenv("POSTGRES_PASSWORD")
+	dbHost := os.Getenv("POSTGRES_HOST")
+	dbPort := os.Getenv("POSTGRES_PORT")
+	dbName := os.Getenv("POSTGRES_DB")
 	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPassword, dbHost, dbPort, dbName)
 
 	for {

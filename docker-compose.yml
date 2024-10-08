@@ -16,6 +16,13 @@ services:
       context: ./auth
       dockerfile: ./auth.Dockerfile
     restart: always
+    ports:
+      - "8081:80"
+    deploy:
+      mode: replicated
+      replicas: 1
+    env_file:
+      - auth/.env
 
 
 

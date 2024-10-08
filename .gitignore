@@ -1,4 +1,8 @@
 .idea/
+
 front-end/frontApp
 broker/brokerApp
+auth/authApp
+
+auth/.env
 db-data/

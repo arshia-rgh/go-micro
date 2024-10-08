@@ -5,13 +5,13 @@ AUTH_BINARY=authApp
 ## up: starts all containers in the background without forcing build
 up:
 	@echo "Starting Docker images..."
-	sudo docker compose up -d
+	docker compose up -d
 	@echo "Docker images started!"
 
 ## up_build: stops docker-compose (if running), builds all projects and starts docker compose
 up_build: build_broker build_auth
 	@echo "Stopping docker images (if running...)"
-	sudo docker compose down
+	docker compose down
 	@echo "Building (when required) and starting docker images..."
 	docker compose up --build -d
 	@echo "Docker images built and started!"
@@ -19,7 +19,7 @@ up_build: build_broker build_auth
 ## down: stop docker compose
 down:
 	@echo "Stopping docker compose..."
-	sudo docker compose down
+	docker compose down
 	@echo "Done!"
 
 ## build_broker: builds the broker binary as a linux executable

@@ -4,6 +4,16 @@ import (
 	"net/http"
 )
 
+type RequestPayload struct {
+	Action string `json:"action"`
+	Auth   AuthPayload
+}
+
+type AuthPayload struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func (app *Config) Broker(w http.ResponseWriter, r *http.Request) {
 	payload := jsonResponse{
 		Error:   false,

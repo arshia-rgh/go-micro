@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 )
 
@@ -44,5 +47,48 @@ func (app *Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Config) authenticate(w http.ResponseWriter, a AuthPayload) {
+	jsonData, _ := json.Marshal(a)
 
+	req, err := http.NewRequest("POST", "https://authentication-service/authenticate", bytes.NewBuffer(jsonData))
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	client := &http.Client{}
+
+	res, err := client.Do(req)
+
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusAccepted {
+		app.errorJSON(w, errors.New("invalid credentials"))
+		return
+	}
+
+	var jsonFromAuth jsonResponse
+
+	err = json.NewDecoder(res.Body).Decode(&jsonFromAuth)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	if jsonFromAuth.Error {
+		app.errorJSON(w, errors.New(fmt.Sprint(jsonFromAuth.Message)), http.StatusUnauthorized)
+		return
+	}
+
+	payload := jsonResponse{
+		Error:   false,
+		Message: "Authenticated !",
+		Data:    jsonFromAuth.Data,
+	}
+
+	app.writeJSON(w, http.StatusAccepted, payload)
 }

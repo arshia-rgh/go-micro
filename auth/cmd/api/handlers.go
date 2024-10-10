@@ -37,7 +37,7 @@ func (app *Config) Authenticate(w http.ResponseWriter, r *http.Request) {
 		Data:    user,
 	}
 
-	err = app.writeJSON(w, http.StatusOK, response)
+	err = app.writeJSON(w, http.StatusAccepted, response)
 	if err != nil {
 		app.errorJSON(w, err, http.StatusBadRequest)
 		return

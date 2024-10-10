@@ -4,7 +4,6 @@ import (
 	"authentication/data"
 	"database/sql"
 	"fmt"
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"log"
 	"net/http"
@@ -58,11 +57,7 @@ func openDB(dsn string) (*sql.DB, error) {
 }
 
 func connectToDB() *sql.DB {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Could not load the env file: %v", err)
-		return nil
-	}
+
 	dbUser := os.Getenv("POSTGRES_USER")
 	dbPassword := os.Getenv("POSTGRES_PASSWORD")
 	dbHost := os.Getenv("POSTGRES_HOST")

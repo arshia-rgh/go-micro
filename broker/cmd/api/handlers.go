@@ -42,3 +42,7 @@ func (app *Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+func (app *Config) authenticate(w http.ResponseWriter, a AuthPayload) {
+
+}

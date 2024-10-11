@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -83,5 +84,21 @@ func (l *LogEntry) All() ([]*LogEntry, error) {
 }
 
 func (l *LogEntry) GetByID(id string) (*LogEntry, error) {
+	collection := db.Collection("logs")
 
+	docID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Println("invalid id format, ", err)
+		return nil, err
+	}
+
+	var entry LogEntry
+	err = collection.FindOne(context.TODO(), bson.M{"_id": docID}).Decode(&entry)
+
+	if err != nil {
+		log.Println("error decoding single log, ", err)
+		return nil, err
+	}
+
+	return &entry, nil
 }

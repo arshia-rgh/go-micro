@@ -81,3 +81,7 @@ func (l *LogEntry) All() ([]*LogEntry, error) {
 
 	return logs, nil
 }
+
+func (l *LogEntry) GetByID(id string) (*LogEntry, error) {
+
+}

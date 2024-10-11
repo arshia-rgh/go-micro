@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"logger/data"
+	"net/http"
 	"os"
 	"time"
 )
@@ -42,6 +43,21 @@ func main() {
 			panic(err)
 		}
 	}()
+
+	app := Config{
+		DB:     client,
+		Models: data.New(client, os.Getenv("MONGO_DB")),
+	}
+
+	srv := &http.Server{
+		Addr:    fmt.Sprintf(":%v", webPort),
+		Handler: app.routes(),
+	}
+
+	err = srv.ListenAndServe()
+	if err != nil {
+		log.Panic(err)
+	}
 }
 
 func connectToMongo() (*mongo.Client, error) {

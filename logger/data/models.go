@@ -111,8 +111,31 @@ func (l *LogEntry) DropCollection() error {
 	collection := db.Collection("logs")
 
 	if err := collection.Drop(ctx); err != nil {
+		log.Println("error dropping the logs collection")
 		return err
 	}
 
 	return nil
+}
+
+func (l *LogEntry) Update() (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	collection := db.Collection("logs")
+
+	docID, err := primitive.ObjectIDFromHex(l.ID)
+	if err != nil {
+		log.Println("invalid id format, ", err)
+		return "", err
+	}
+
+	id, err := collection.UpdateByID(ctx, docID, l)
+	if err != nil {
+		log.Println("error updating the log, ", err)
+		return "", err
+	}
+
+	return fmt.Sprint(id.UpsertedID), nil
+
 }

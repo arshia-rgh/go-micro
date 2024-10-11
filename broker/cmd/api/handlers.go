@@ -33,7 +33,7 @@ func (app *Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
 
 	err := app.readJSON(w, r, &requestPayload)
 	if err != nil {
-		app.errorJSON(w, err)
+		_ = app.errorJSON(w, err)
 		return
 	}
 
@@ -42,7 +42,7 @@ func (app *Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
 		app.authenticate(w, requestPayload.Auth)
 
 	default:
-		app.errorJSON(w, errors.New("unknown action"))
+		_ = app.errorJSON(w, errors.New("unknown action"))
 	}
 
 }
@@ -52,7 +52,7 @@ func (app *Config) authenticate(w http.ResponseWriter, a AuthPayload) {
 
 	req, err := http.NewRequest("POST", "https://authentication-service/authenticate", bytes.NewBuffer(jsonData))
 	if err != nil {
-		app.errorJSON(w, err)
+		_ = app.errorJSON(w, err)
 		return
 	}
 
@@ -61,14 +61,14 @@ func (app *Config) authenticate(w http.ResponseWriter, a AuthPayload) {
 	res, err := client.Do(req)
 
 	if err != nil {
-		app.errorJSON(w, err)
+		_ = app.errorJSON(w, err)
 		return
 	}
 
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusAccepted {
-		app.errorJSON(w, errors.New("invalid credentials"))
+		_ = app.errorJSON(w, errors.New("invalid credentials"))
 		return
 	}
 
@@ -76,12 +76,12 @@ func (app *Config) authenticate(w http.ResponseWriter, a AuthPayload) {
 
 	err = json.NewDecoder(res.Body).Decode(&jsonFromAuth)
 	if err != nil {
-		app.errorJSON(w, err)
+		_ = app.errorJSON(w, err)
 		return
 	}
 
 	if jsonFromAuth.Error {
-		app.errorJSON(w, errors.New(fmt.Sprint(jsonFromAuth.Message)), http.StatusUnauthorized)
+		_ = app.errorJSON(w, errors.New(fmt.Sprint(jsonFromAuth.Message)), http.StatusUnauthorized)
 		return
 	}
 
@@ -91,5 +91,5 @@ func (app *Config) authenticate(w http.ResponseWriter, a AuthPayload) {
 		Data:    jsonFromAuth.Data,
 	}
 
-	app.writeJSON(w, http.StatusAccepted, payload)
+	_ = app.writeJSON(w, http.StatusAccepted, payload)
 }

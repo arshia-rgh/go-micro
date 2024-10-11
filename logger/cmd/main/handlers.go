@@ -22,7 +22,7 @@ func (app *Config) WriteLog(w http.ResponseWriter, r *http.Request) {
 
 	ID, err := event.Insert()
 	if err != nil {
-		app.errorJSON(w, err)
+		_ = app.errorJSON(w, err)
 		return
 	}
 

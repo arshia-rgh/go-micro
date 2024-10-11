@@ -3,7 +3,9 @@ package data
 import (
 	"context"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"time"
 )
@@ -44,6 +46,38 @@ func (l *LogEntry) Insert() (string, error) {
 
 }
 
-func (l *LogEntry) All() {
+func (l *LogEntry) All() ([]*LogEntry, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 
+	defer cancel()
+
+	collection := db.Collection("logs")
+
+	opts := options.Find()
+	opts.SetSort(bson.D{{"created_at", -1}})
+
+	cursor, err := collection.Find(context.TODO(), bson.D{{}}, opts)
+	if err != nil {
+		log.Println("failed to get all logs, ", err)
+		return nil, err
+	}
+
+	defer cursor.Close(ctx)
+
+	var logs []*LogEntry
+
+	for cursor.Next(ctx) {
+		var item *LogEntry
+
+		err := cursor.Decode(&item)
+
+		if err != nil {
+			log.Println("error decoding mongodb item to the slice, ", err)
+			return nil, err
+		}
+
+		logs = append(logs, item)
+	}
+
+	return logs, nil
 }

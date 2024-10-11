@@ -39,7 +39,12 @@ type LogEntry struct {
 func (l *LogEntry) Insert() (string, error) {
 	collection := db.Collection("logs")
 
-	one, err := collection.InsertOne(context.TODO(), l)
+	one, err := collection.InsertOne(context.TODO(), LogEntry{
+		Name:      l.Name,
+		Data:      l.Data,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	})
 	if err != nil {
 		log.Println("failed to insert into logs", err)
 		return "", err

@@ -43,3 +43,7 @@ func (l *LogEntry) Insert() (string, error) {
 	return fmt.Sprint(one.InsertedID), nil
 
 }
+
+func (l *LogEntry) All() {
+
+}

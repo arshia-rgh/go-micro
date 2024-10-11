@@ -11,6 +11,8 @@ import (
 	"time"
 )
 
+const dbTimeout = 15 * time.Second
+
 var client *mongo.Client
 var db *mongo.Database
 
@@ -48,7 +50,7 @@ func (l *LogEntry) Insert() (string, error) {
 }
 
 func (l *LogEntry) All() ([]*LogEntry, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 
 	defer cancel()
 
@@ -103,7 +105,7 @@ func (l *LogEntry) GetByID(id string) (*LogEntry, error) {
 	return &entry, nil
 }
 func (l *LogEntry) DropCollection() error {
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
 	collection := db.Collection("logs")

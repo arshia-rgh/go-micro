@@ -67,7 +67,7 @@ func (l *LogEntry) All() ([]*LogEntry, error) {
 	var logs []*LogEntry
 
 	for cursor.Next(ctx) {
-		var item *LogEntry
+		var item LogEntry
 
 		err := cursor.Decode(&item)
 
@@ -76,7 +76,7 @@ func (l *LogEntry) All() ([]*LogEntry, error) {
 			return nil, err
 		}
 
-		logs = append(logs, item)
+		logs = append(logs, &item)
 	}
 
 	return logs, nil

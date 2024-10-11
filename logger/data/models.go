@@ -130,12 +130,22 @@ func (l *LogEntry) Update() (string, error) {
 		return "", err
 	}
 
-	id, err := collection.UpdateByID(ctx, docID, l)
+	updateOne, err := collection.UpdateOne(
+		ctx,
+		bson.D{{"_id", docID}},
+		bson.D{
+			{"$set", bson.D{
+				{"name", l.Name},
+				{"data", l.Data},
+				{"updated_at", time.Now()},
+			}},
+		},
+	)
 	if err != nil {
 		log.Println("error updating the log, ", err)
 		return "", err
 	}
 
-	return fmt.Sprint(id.UpsertedID), nil
+	return fmt.Sprint(updateOne), err
 
 }

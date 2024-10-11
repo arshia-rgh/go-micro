@@ -6,6 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"logger/data"
 	"os"
 	"time"
 )
@@ -19,6 +20,8 @@ const (
 var client *mongo.Client
 
 type Config struct {
+	DB     *mongo.Client
+	Models data.Models
 }
 
 func main() {

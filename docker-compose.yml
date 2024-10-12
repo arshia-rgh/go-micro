@@ -32,7 +32,7 @@ services:
       mode: replicated
       replicas: 1
     env_file:
-      - auth/.env
+      - logger/.env
 
   postgres:
     image: "postgres:latest"

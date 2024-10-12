@@ -35,7 +35,7 @@ build_auth:
 	cd auth && env GOOS=linux CGO_ENABLED=0 go build -o ${AUTH_BINARY} ./cmd/api
 	@echo "Done!"
 
-## build_auth: builds the logger binary as a linux executable
+## build_logger: builds the logger binary as a linux executable
 build_logger:
 	@echo "Building logger binary..."
 	cd logger && env GOOS=linux CGO_ENABLED=0 go build -o ${LOGGER_BINARY} ./cmd/api

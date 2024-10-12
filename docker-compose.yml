@@ -39,7 +39,7 @@ services:
   mongo:
     image: "mongo:latest"
     ports:
-      - "27017:27017"
+      - "27018:27017"
     env_file:
       - logger/.env
     restart: always

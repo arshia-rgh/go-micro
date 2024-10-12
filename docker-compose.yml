@@ -23,6 +23,17 @@ services:
     env_file:
       - auth/.env
 
+  logger-service:
+    build:
+      context: ./logger
+      dockerfile: ./logger.Dockerfile
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    env_file:
+      - auth/.env
+
   postgres:
     image: "postgres:latest"
     ports:

@@ -11,6 +11,7 @@ import (
 type RequestPayload struct {
 	Action string `json:"action"`
 	Auth   AuthPayload
+	Log    LogPayload
 }
 
 type AuthPayload struct {

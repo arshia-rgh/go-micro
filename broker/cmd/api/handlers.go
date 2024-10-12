@@ -58,7 +58,7 @@ func (app *Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
 func (app *Config) authenticate(w http.ResponseWriter, a AuthPayload) {
 	jsonData, _ := json.Marshal(a)
 
-	req, err := http.NewRequest("POST", "https://authentication-service/authenticate", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", "http://authentication-service:8080/authenticate", bytes.NewBuffer(jsonData))
 	if err != nil {
 		_ = app.errorJSON(w, err)
 		return
@@ -105,7 +105,7 @@ func (app *Config) authenticate(w http.ResponseWriter, a AuthPayload) {
 func (app *Config) log(w http.ResponseWriter, l LogPayload) {
 	jsonData, _ := json.Marshal(l)
 
-	request, err := http.NewRequest("POST", "https://logger-service/log", bytes.NewBuffer(jsonData))
+	request, err := http.NewRequest("POST", "http://logger-service:8080/log", bytes.NewBuffer(jsonData))
 	if err != nil {
 		_ = app.errorJSON(w, err)
 		return

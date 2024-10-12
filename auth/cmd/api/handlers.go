@@ -40,3 +40,7 @@ func (app *Config) Authenticate(w http.ResponseWriter, r *http.Request) {
 	_ = app.writeJSON(w, http.StatusAccepted, response)
 
 }
+
+func (app *Config) logRequest(name, data string) error {
+
+}

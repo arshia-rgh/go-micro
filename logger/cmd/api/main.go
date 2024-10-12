@@ -67,8 +67,12 @@ func connectToMongo() (*mongo.Client, error) {
 	dbHost := os.Getenv("MONGO_HOST")
 	dbPort := os.Getenv("MONGO_PORT")
 	dbName := os.Getenv("MONGO_DB")
-
-	uri := fmt.Sprintf("mongodb://%v:%v@%v:%v/%v", dbUser, dbPassword, dbHost, dbPort, dbName)
+	var uri string
+	if dbUser != "" {
+		uri = fmt.Sprintf("mongodb://%v:%v@%v:%v/%v", dbUser, dbPassword, dbHost, dbPort, dbName)
+	} else {
+		uri = fmt.Sprintf("mongodb://%v:%v/%v", dbHost, dbPort, dbName)
+	}
 
 	clientOptions := options.Client().ApplyURI(uri)
 

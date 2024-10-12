@@ -20,6 +20,6 @@ func (app *Config) routes() http.Handler {
 		Debug:            true,
 	}))
 	mux.Use(middleware.Heartbeat("/ping"))
-	mux.Get("/log", app.WriteLog)
+	mux.Post("/log", app.WriteLog)
 	return mux
 }

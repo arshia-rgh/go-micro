@@ -6,3 +6,4 @@ auth/authApp
 
 auth/.env
 db-data/
+logger/.env

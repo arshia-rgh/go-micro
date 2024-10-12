@@ -3,6 +3,8 @@
 front-end/frontApp
 broker/brokerApp
 auth/authApp
+logger/loggerApp
+
 
 auth/.env
 db-data/

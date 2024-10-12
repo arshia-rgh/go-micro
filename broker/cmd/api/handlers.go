@@ -103,5 +103,32 @@ func (app *Config) authenticate(w http.ResponseWriter, a AuthPayload) {
 }
 
 func (app *Config) log(w http.ResponseWriter, l LogPayload) {
+	jsonData, _ := json.Marshal(l)
 
+	request, err := http.NewRequest("GET", "https://logger-service/log", bytes.NewBuffer(jsonData))
+	if err != nil {
+		_ = app.errorJSON(w, err)
+		return
+	}
+
+	client := &http.Client{}
+	res, err := client.Do(request)
+	if err != nil {
+		_ = app.errorJSON(w, err)
+		return
+	}
+
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusCreated {
+		_ = app.errorJSON(w, errors.New("log did not created "))
+		return
+	}
+
+	payload := jsonResponse{
+		Error:   false,
+		Message: "Logged !",
+	}
+
+	_ = app.writeJSON(w, http.StatusAccepted, payload)
 }

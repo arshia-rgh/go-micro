@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"gopkg.in/gomail.v2"
 	"html/template"
 )
 
@@ -50,6 +51,34 @@ func (m *Mail) SendSMTPMessage(msg Message) error {
 	if err != nil {
 		return err
 	}
+
+	message := gomail.NewMessage()
+
+	message.SetHeader("From", msg.From)
+	message.SetHeader("To", msg.To)
+	message.SetHeader("Subject", msg.Subject)
+	message.SetBody("text/plain", plainMessage)
+	message.AddAlternative("text/html", formattedMessage)
+
+	if len(msg.Attachments) > 0 {
+		for _, v := range msg.Attachments {
+			message.Attach(v)
+		}
+	}
+
+	server := gomail.NewDialer(
+		m.Host,
+		m.Port,
+		m.Username,
+		m.Password,
+	)
+
+	if err = server.DialAndSend(message); err != nil {
+		return err
+	}
+
+	return nil
+
 }
 
 func (m *Mail) buildHTMLMessage(msg Message) (string, error) {

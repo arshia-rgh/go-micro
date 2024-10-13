@@ -143,5 +143,34 @@ func (app *Config) log(w http.ResponseWriter, l LogPayload) {
 }
 
 func (app *Config) mail(w http.ResponseWriter, m MailPayload) {
+	jsonData, _ := json.Marshal(m)
 
+	req, err := http.NewRequest("POST", "http://mail:8080/send", bytes.NewBuffer(jsonData))
+
+	if err != nil {
+		_ = app.errorJSON(w, err)
+		return
+	}
+
+	client := &http.Client{}
+
+	res, err := client.Do(req)
+	if err != nil {
+		_ = app.errorJSON(w, err)
+		return
+	}
+
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusAccepted {
+		_ = app.errorJSON(w, errors.New("mail did not sent"))
+		return
+	}
+
+	payload := jsonResponse{
+		Error:   false,
+		Message: "mail sent",
+	}
+
+	_ = app.writeJSON(w, http.StatusAccepted, payload)
 }

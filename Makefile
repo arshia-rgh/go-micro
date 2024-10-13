@@ -45,7 +45,7 @@ build_logger:
 ## build_mail: builds the mail binary as a linux executable
 build_mail:
 	@echo "Building mail binary..."
-	cd mail && env GOOS=linux CGO_ENABLED=0 go build -o ${MAIL_BIBNARY} ./cmd/api
+	cd mail && env GOOS=linux CGO_ENABLED=0 go build -o ${MAIL_BINARY} ./cmd/api
 	@echo "Done!"
 
 ## build_front: builds the frone end binary

@@ -55,6 +55,8 @@ func (app *Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
 		app.authenticate(w, requestPayload.Auth)
 	case "log":
 		app.log(w, requestPayload.Log)
+	case "mail":
+		app.mail(w, requestPayload.Mail)
 
 	default:
 		_ = app.errorJSON(w, errors.New("unknown action"))
@@ -138,4 +140,8 @@ func (app *Config) log(w http.ResponseWriter, l LogPayload) {
 	}
 
 	_ = app.writeJSON(w, http.StatusAccepted, payload)
+}
+
+func (app *Config) mail(w http.ResponseWriter, m MailPayload) {
+
 }

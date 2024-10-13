@@ -5,7 +5,8 @@ broker/brokerApp
 auth/authApp
 logger/loggerApp
 
-
-auth/.env
 db-data/
+
 logger/.env
+auth/.env
+mail/.env

@@ -4,6 +4,7 @@ front-end/frontApp
 broker/brokerApp
 auth/authApp
 logger/loggerApp
+mail/mailApp
 
 db-data/
 

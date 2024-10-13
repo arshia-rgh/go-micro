@@ -74,6 +74,8 @@ func (m *Mail) SendSMTPMessage(msg Message) error {
 		m.Password,
 	)
 
+	m.setEncryption(server)
+
 	if err = server.DialAndSend(message); err != nil {
 		return err
 	}

@@ -15,7 +15,7 @@ up_build: build_broker build_auth build_logger build_mail
 	@echo "Stopping docker images (if running...)"
 	sudo docker compose down
 	@echo "Building (when required) and starting docker images..."
-	sudo docker compose up --build -d
+	sudo docker compose up --build
 	@echo "Docker images built and started!"
 
 ## down: stop docker compose

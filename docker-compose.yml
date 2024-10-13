@@ -1,4 +1,5 @@
 services:
+  #  app service
   broker-service:
     build:
       context: ./broker
@@ -33,7 +34,19 @@ services:
       replicas: 1
     env_file:
       - logger/.env
-
+  mail:
+    build:
+      context: ./mail
+      dockerfile: ./mail.Dockerfile
+    ports:
+      - "8083:8080"
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    env_file:
+      - mail/.env
+  # Databases
   postgres:
     image: "postgres:latest"
     ports:
@@ -59,7 +72,7 @@ services:
       replicas: 1
     volumes:
       - ./db-data/mongo/:/data/db/
-
+  # Fake mail service
   mailhog:
     image: 'mailhog/mailhog:latest'
     ports:

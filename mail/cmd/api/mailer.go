@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"crypto/tls"
 	"gopkg.in/gomail.v2"
 	"html/template"
 )
@@ -115,4 +116,18 @@ func (m *Mail) buildPlainTextMessage(msg Message) (string, error) {
 	plainMessage := tpl.String()
 
 	return plainMessage, nil
+}
+
+func (m *Mail) setEncryption(dialer *gomail.Dialer) {
+	switch m.Encryption {
+	case "SSL":
+		dialer.SSL = true
+	case "TLS":
+		dialer.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	case "None", "":
+		dialer.SSL = false
+		dialer.TLSConfig = nil
+	default:
+		dialer.SSL = true
+	}
 }

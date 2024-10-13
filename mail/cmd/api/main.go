@@ -15,7 +15,11 @@ type Config struct {
 const webPort = "8080"
 
 func main() {
-	app := Config{}
+
+	mail := createMail()
+	app := Config{
+		Mailer: mail,
+	}
 
 	log.Printf("starting the mail service on port %v\n", webPort)
 

@@ -83,8 +83,8 @@ services:
   rabbitmq:
     image: "rabbitmq:4.0.2-management-alpine"
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "5674:5672"
+      - "15673:15672"
     restart: always
     deploy:
       mode: replicated

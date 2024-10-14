@@ -1,7 +1,9 @@
 package event
 
 import (
+	"encoding/json"
 	amqp "github.com/rabbitmq/amqp091-go"
+	"log"
 	"os"
 )
 
@@ -79,5 +81,48 @@ func (consumer *Consumer) Listen(topics []string) error {
 		false,
 		nil,
 	)
+
+	forever := make(chan bool)
+
+	go func() {
+		for d := range messages {
+			var payload Payload
+			_ = json.Unmarshal(d.Body, &payload)
+
+			go handlePayload(payload)
+		}
+	}()
+
+	log.Printf("waiting for message [Exchange, Queue] = [%v, %v]\n", exchangeName, q.Name)
+	<-forever
+
+	return nil
+
+}
+
+func handlePayload(payload Payload) error {
+	switch payload.Name {
+	case "log", "event":
+		err := logEvent(payload)
+
+		if err != nil {
+			log.Println(err)
+		}
+
+	case "auth":
+		// auth
+
+	default:
+		err := logEvent(payload)
+
+		if err != nil {
+			log.Println(err)
+		}
+
+	}
+
+}
+
+func logEvent(entry Payload) error {
 
 }

@@ -23,6 +23,8 @@ services:
       replicas: 1
     env_file:
       - auth/.env
+    depends_on:
+      - postgres
 
   logger-service:
     build:
@@ -34,6 +36,8 @@ services:
       replicas: 1
     env_file:
       - logger/.env
+    depends_on:
+      - mongo
 
   mail-service:
     build:
@@ -47,6 +51,8 @@ services:
       replicas: 1
     env_file:
       - mail/.env
+    depends_on:
+      - mailhog
 
   listener-service:
     build:
@@ -58,6 +64,8 @@ services:
       replicas: 1
     env_file:
       - listener/.env
+    depends_on:
+      - rabbitmq
 
   # Databases
   postgres:

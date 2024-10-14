@@ -180,7 +180,7 @@ func (app *Config) logEventViaRabbit(w http.ResponseWriter, l LogPayload) {
 	err := app.pushToQueue(l.Name, l.Data)
 
 	if err != nil {
-		_ = app.writeJSON(w, err)
+		_ = app.errorJSON(w, err)
 		return
 	}
 

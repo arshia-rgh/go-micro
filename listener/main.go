@@ -15,6 +15,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	defer rabbitMQ.Close()
+
 }
 
 func connect() (*amqp.Connection, error) {

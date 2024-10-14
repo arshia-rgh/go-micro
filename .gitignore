@@ -11,3 +11,4 @@ db-data/
 logger/.env
 auth/.env
 mail/.env
+listener/.env

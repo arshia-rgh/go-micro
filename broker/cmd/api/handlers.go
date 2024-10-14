@@ -177,7 +177,19 @@ func (app *Config) mail(w http.ResponseWriter, m MailPayload) {
 }
 
 func (app *Config) logEventViaRabbit(w http.ResponseWriter, l LogPayload) {
+	err := app.pushToQueue(l.Name, l.Data)
 
+	if err != nil {
+		_ = app.writeJSON(w, err)
+		return
+	}
+
+	payload := jsonResponse{
+		Error:   false,
+		Message: "Logged !",
+	}
+
+	_ = app.writeJSON(w, http.StatusAccepted, payload)
 }
 
 func (app *Config) pushToQueue(name, msg string) error {

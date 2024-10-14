@@ -10,6 +10,10 @@ import (
 )
 
 func main() {
+	rabbitMQ, err := connect()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 }
 

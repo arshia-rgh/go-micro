@@ -9,6 +9,7 @@ listener/listenerApp
 
 db-data/
 
+broker/.env
 logger/.env
 auth/.env
 mail/.env

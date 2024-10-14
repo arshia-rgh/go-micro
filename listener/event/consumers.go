@@ -10,6 +10,8 @@ type Consumer struct {
 	queueName string
 }
 
+var exchangeName = os.Getenv("RABBITMQ_EXCHANGE")
+
 func NewConsumer(conn *amqp.Connection) (Consumer, error) {
 	consumer := Consumer{
 		conn: conn,
@@ -32,7 +34,6 @@ func (consumer *Consumer) setup() error {
 
 	defer channel.Close()
 
-	exchangeName := os.Getenv("RABBITMQ_EXCHANGE")
 	return declareExchange(exchangeName, channel)
 
 }
@@ -54,6 +55,19 @@ func (consumer *Consumer) Listen(topics []string) error {
 
 	if err != nil {
 		return err
+	}
+
+	for _, v := range topics {
+		err = channel.QueueBind(
+			q.Name,
+			v,
+			exchangeName,
+			false,
+			nil,
+		)
+		if err != nil {
+			return err
+		}
 	}
 
 }

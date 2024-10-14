@@ -14,6 +14,14 @@ func NewConsumer(conn *amqp.Connection) (Consumer, error) {
 	consumer := Consumer{
 		conn: conn,
 	}
+
+	err := consumer.setup()
+
+	if err != nil {
+		return Consumer{}, err
+	}
+
+	return consumer, nil
 }
 
 func (consumer *Consumer) setup() error {
@@ -25,14 +33,6 @@ func (consumer *Consumer) setup() error {
 	defer channel.Close()
 
 	exchangeName := os.Getenv("RABBITMQ_EXCHANGE")
-	return channel.ExchangeDeclare(
-		exchangeName,
-		"direct",
-		true,
-		false,
-		false,
-		false,
-		nil,
-	)
+	return declareExchange(exchangeName, channel)
 
 }

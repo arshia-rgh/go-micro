@@ -20,7 +20,7 @@ func (emitter *Emitter) setup() error {
 	return declareExchange(exchangeName, channel)
 }
 
-func (emitter *Emitter) push(event, key string) error {
+func (emitter *Emitter) Push(event, key string) error {
 	channel, err := emitter.connection.Channel()
 
 	if err != nil {

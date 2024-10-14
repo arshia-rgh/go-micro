@@ -1,6 +1,7 @@
 package main
 
 import (
+	"broker/event"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -180,5 +181,20 @@ func (app *Config) logEventViaRabbit(w http.ResponseWriter, l LogPayload) {
 }
 
 func (app *Config) pushToQueue(name, msg string) error {
+	emitter, err := event.NewEmitter(app.Rabbit)
+
+	if err != nil {
+		return err
+	}
+
+	payload := LogPayload{
+		Name: name,
+		Data: msg,
+	}
+
+	jsonData, _ := json.Marshal(payload)
+
+	err = emitter.Push(string(jsonData), "log.INFO")
+	return err
 
 }

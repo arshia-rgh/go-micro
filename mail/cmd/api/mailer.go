@@ -85,6 +85,7 @@ func (m *Mail) SendSMTPMessage(msg Message) error {
 }
 
 func (m *Mail) buildHTMLMessage(msg Message) (string, error) {
+	// TODO: Getting no such file or directory should be fixed
 	templateToRender := "./templates/mail.html.gohtml"
 
 	t, err := template.New("email-html").ParseFiles(templateToRender)
@@ -103,6 +104,7 @@ func (m *Mail) buildHTMLMessage(msg Message) (string, error) {
 }
 
 func (m *Mail) buildPlainTextMessage(msg Message) (string, error) {
+	// TODO: Getting no such file or directory should be fixed
 	templateToRender := "./templates/mail.plain.gohtml"
 
 	t, err := template.New("email-plain").ParseFiles(templateToRender)

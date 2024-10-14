@@ -70,4 +70,14 @@ func (consumer *Consumer) Listen(topics []string) error {
 		}
 	}
 
+	messages, err := channel.Consume(
+		q.Name,
+		"",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+
 }

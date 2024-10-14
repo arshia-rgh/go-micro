@@ -41,3 +41,19 @@ type Payload struct {
 	Name string `json:"name"`
 	Data string `json:"data"`
 }
+
+func (consumer *Consumer) Listen(topics []string) error {
+	channel, err := consumer.conn.Channel()
+	if err != nil {
+		return err
+	}
+
+	defer channel.Close()
+
+	q, err := declareRandomQueue(channel)
+
+	if err != nil {
+		return err
+	}
+
+}

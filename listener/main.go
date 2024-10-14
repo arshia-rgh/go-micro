@@ -14,6 +14,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println("connected to RabbitMQ")
 
 	defer rabbitMQ.Close()
 

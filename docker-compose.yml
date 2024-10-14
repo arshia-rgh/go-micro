@@ -10,6 +10,10 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+    env_file:
+      - broker/.env
+    depends_on:
+      - rabbitmq
 
   authentication-service:
     build:

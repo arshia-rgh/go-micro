@@ -36,3 +36,8 @@ func (consumer *Consumer) setup() error {
 	return declareExchange(exchangeName, channel)
 
 }
+
+type Payload struct {
+	Name string `json:"name"`
+	Data string `json:"data"`
+}

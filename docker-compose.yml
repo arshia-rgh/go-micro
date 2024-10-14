@@ -34,7 +34,8 @@ services:
       replicas: 1
     env_file:
       - logger/.env
-  mail:
+
+  mail-service:
     build:
       context: ./mail
       dockerfile: ./mail.Dockerfile
@@ -46,6 +47,18 @@ services:
       replicas: 1
     env_file:
       - mail/.env
+
+  listener-service:
+    build:
+      context: ./listener
+      dockerfile: ./listener.Dockerfile
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    env_file:
+      - listener/.env
+
   # Databases
   postgres:
     image: "postgres:latest"

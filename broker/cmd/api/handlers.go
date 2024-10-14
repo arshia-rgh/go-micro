@@ -145,7 +145,7 @@ func (app *Config) log(w http.ResponseWriter, l LogPayload) {
 func (app *Config) mail(w http.ResponseWriter, m MailPayload) {
 	jsonData, _ := json.Marshal(m)
 
-	req, err := http.NewRequest("POST", "http://mail:8080/send", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", "http://mail-service:8080/send", bytes.NewBuffer(jsonData))
 
 	if err != nil {
 		_ = app.errorJSON(w, err)

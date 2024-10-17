@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/rpc"
 )
 
 type RequestPayload struct {
@@ -211,6 +212,35 @@ func (app *Config) pushToQueue(name, msg string) error {
 
 }
 
-func (app *Config) logItemViaRPC() {
+type RPCPayload struct {
+	Name string
+	Data string
+}
 
+func (app *Config) logItemViaRPC(w http.ResponseWriter, l LogPayload) {
+	client, err := rpc.Dial("tcp", "logger-service:5001")
+
+	if err != nil {
+		_ = app.errorJSON(w, err)
+		return
+	}
+	rpcPayload := RPCPayload{
+		Name: l.Name,
+		Data: l.Data,
+	}
+
+	var result string
+
+	err = client.Call("RPCServer.LogInfo", rpcPayload, &result)
+	if err != nil {
+		_ = app.errorJSON(w, err)
+		return
+	}
+
+	response := jsonResponse{
+		Error:   false,
+		Message: result,
+	}
+
+	_ = app.writeJSON(w, http.StatusAccepted, response)
 }

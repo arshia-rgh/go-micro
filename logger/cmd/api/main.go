@@ -60,6 +60,10 @@ func main() {
 	}
 }
 
+func (app *Config) rpcListen() {
+
+}
+
 func connectToMongo() (*mongo.Client, error) {
 
 	dbUser := os.Getenv("MONGO_USER")

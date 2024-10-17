@@ -51,6 +51,9 @@ func main() {
 		Models: data.New(client, os.Getenv("MONGO_DB")),
 	}
 
+	err = rpc.Register(new(RPCServer))
+	go app.rpcListen()
+
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%v", webPort),
 		Handler: app.routes(),

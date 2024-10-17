@@ -7,7 +7,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"logger/data"
+	"net"
 	"net/http"
+	"net/rpc"
 	"os"
 	"time"
 )
@@ -60,7 +62,24 @@ func main() {
 	}
 }
 
-func (app *Config) rpcListen() {
+func (app *Config) rpcListen() error {
+	log.Println("starting rpc server on port, ", rpcPort)
+	listen, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%v", rpcPort))
+	if err != nil {
+		return err
+	}
+
+	defer listen.Close()
+
+	for {
+		rpcConn, err := listen.Accept()
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+
+		go rpc.ServeConn(rpcConn)
+	}
 
 }
 

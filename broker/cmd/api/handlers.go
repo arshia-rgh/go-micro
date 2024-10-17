@@ -244,3 +244,7 @@ func (app *Config) logItemViaRPC(w http.ResponseWriter, l LogPayload) {
 
 	_ = app.writeJSON(w, http.StatusAccepted, response)
 }
+
+func (app *Config) LogViaGRPC(w http.ResponseWriter, l LogPayload) {
+
+}

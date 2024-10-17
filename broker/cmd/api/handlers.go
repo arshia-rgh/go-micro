@@ -210,3 +210,7 @@ func (app *Config) pushToQueue(name, msg string) error {
 	return err
 
 }
+
+func (app *Config) logItemViaRPC() {
+
+}

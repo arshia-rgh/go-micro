@@ -1,0 +1,106 @@
+services:
+  #  app service
+  broker-service:
+    image: "arshio12/broker-service:1.0.0"
+    restart: always
+    ports:
+      - "8080:8080"
+    deploy:
+      mode: replicated
+      replicas: 1
+    env_file:
+      - broker/.env
+    depends_on:
+      - rabbitmq
+
+  authentication-service:
+    image: "arshio12/auth-service:1.0.0"
+    restart: always
+    ports:
+      - "8081:8080"
+    deploy:
+      mode: replicated
+      replicas: 1
+    env_file:
+      - auth/.env
+    depends_on:
+      - postgres
+
+  logger-service:
+    image: "arshio12/logger-service:1.0.0"
+
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    env_file:
+      - logger/.env
+    depends_on:
+      - mongo
+
+  mail-service:
+    image: "arshio12/mailer-service:1.0.0"
+    ports:
+      - "8083:8080"
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    env_file:
+      - mail/.env
+    depends_on:
+      - mailhog
+
+  listener-service:
+    image: "arshio12/listener-service:1.0.0"
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    env_file:
+      - listener/.env
+    depends_on:
+      - rabbitmq
+
+  # Databases
+  postgres:
+    image: "postgres:latest"
+    ports:
+      - "5433:5432"
+    restart: always
+    deploy:
+      mode: global
+    env_file:
+      - auth/.env
+    volumes:
+      - ./db-data/postgres/:/var/lib/postgresql/data/
+
+  mongo:
+    image: "mongo:latest"
+    ports:
+      - "27018:27017"
+    env_file:
+      - logger/.env
+    restart: always
+    deploy:
+      mode: global
+    volumes:
+      - ./db-data/mongo/:/data/db/
+  # Fake mail service
+  mailhog:
+    image: 'mailhog/mailhog:latest'
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+  # RabbitMQ
+
+  rabbitmq:
+    image: "rabbitmq:4.0.2-management-alpine"
+    ports:
+      - "5674:5672"
+      - "15673:15672"
+    restart: always
+    deploy:
+      mode: global
+    volumes:
+      - ./db-data/rabbitmq/:/var/lib/rabbitmq/

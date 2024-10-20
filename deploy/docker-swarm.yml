@@ -61,7 +61,7 @@ services:
       mode: replicated
       replicas: 1
     env_file:
-      - mail/.env
+      - ../mail/.env
     depends_on:
       - mailhog
 

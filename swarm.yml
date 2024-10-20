@@ -1,5 +1,13 @@
 services:
   #  app service
+  front-end:
+    image: "arshio12/front-end-service:1.0.0"
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+
+
   broker-service:
     image: "arshio12/broker-service:1.0.0"
     restart: always

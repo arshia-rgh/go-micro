@@ -1,4 +1,16 @@
 services:
+  caddy:
+    image: "arshio12/caddy-micro"
+    deploy:
+      mode: replicated
+      replicas: 1
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+
   #  app service
   front-end:
     image: "arshio12/front-end-service:1.0.0"
@@ -106,3 +118,9 @@ services:
       mode: global
     volumes:
       - ../db-data/rabbitmq/:/var/lib/rabbitmq/
+
+
+volumes:
+  caddy_data:
+    external: true
+  caddy_config:

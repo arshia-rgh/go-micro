@@ -14,7 +14,6 @@ services:
   #  app service
   front-end:
     image: "arshio12/front-end-service:1.0.0"
-    restart: always
     deploy:
       mode: replicated
       replicas: 1
@@ -22,7 +21,6 @@ services:
 
   broker-service:
     image: "arshio12/broker-service:1.0.0"
-    restart: always
     deploy:
       mode: replicated
       replicas: 1
@@ -33,7 +31,6 @@ services:
 
   authentication-service:
     image: "arshio12/auth-service:1.0.0"
-    restart: always
     deploy:
       mode: replicated
       replicas: 1
@@ -44,8 +41,6 @@ services:
 
   logger-service:
     image: "arshio12/logger-service:1.0.0"
-
-    restart: always
     deploy:
       mode: replicated
       replicas: 1
@@ -56,7 +51,6 @@ services:
 
   mail-service:
     image: "arshio12/mailer-service:1.0.0"
-    restart: always
     deploy:
       mode: replicated
       replicas: 1
@@ -67,7 +61,6 @@ services:
 
   listener-service:
     image: "arshio12/listener-service:1.0.0"
-    restart: always
     deploy:
       mode: replicated
       replicas: 1
@@ -81,7 +74,6 @@ services:
     image: "postgres:latest"
     ports:
       - "5433:5432"
-    restart: always
     deploy:
       mode: global
     env_file:
@@ -95,7 +87,6 @@ services:
       - "27018:27017"
     env_file:
       - ../logger/.env
-    restart: always
     deploy:
       mode: global
     volumes:
@@ -113,7 +104,6 @@ services:
     ports:
       - "5674:5672"
       - "15673:15672"
-    restart: always
     deploy:
       mode: global
     volumes:

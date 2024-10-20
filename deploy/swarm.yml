@@ -15,7 +15,7 @@ services:
       mode: replicated
       replicas: 1
     env_file:
-      - broker/.env
+      - ../broker/.env
     depends_on:
       - rabbitmq
 
@@ -26,7 +26,7 @@ services:
       mode: replicated
       replicas: 1
     env_file:
-      - auth/.env
+      - ../auth/.env
     depends_on:
       - postgres
 
@@ -38,7 +38,7 @@ services:
       mode: replicated
       replicas: 1
     env_file:
-      - logger/.env
+      - ../logger/.env
     depends_on:
       - mongo
 
@@ -60,7 +60,7 @@ services:
       mode: replicated
       replicas: 1
     env_file:
-      - listener/.env
+      - ../listener/.env
     depends_on:
       - rabbitmq
 
@@ -73,21 +73,21 @@ services:
     deploy:
       mode: global
     env_file:
-      - auth/.env
+      - ../auth/.env
     volumes:
-      - ./db-data/postgres/:/var/lib/postgresql/data/
+      - ../db-data/postgres/:/var/lib/postgresql/data/
 
   mongo:
     image: "mongo:latest"
     ports:
       - "27018:27017"
     env_file:
-      - logger/.env
+      - ../logger/.env
     restart: always
     deploy:
       mode: global
     volumes:
-      - ./db-data/mongo/:/data/db/
+      - ../db-data/mongo/:/data/db/
   # Fake mail service
   mailhog:
     image: 'mailhog/mailhog:latest'
@@ -105,4 +105,4 @@ services:
     deploy:
       mode: global
     volumes:
-      - ./db-data/rabbitmq/:/var/lib/rabbitmq/
+      - ../db-data/rabbitmq/:/var/lib/rabbitmq/

@@ -13,11 +13,12 @@ services:
 
   #  app service
   front-end:
-    image: "arshio12/front-end-service:1.0.0"
+    image: "arshio12/front-end-service:1.0.1"
     deploy:
       mode: replicated
       replicas: 1
-
+    environment:
+      BROKER_URL: "http://backend"
 
   broker-service:
     image: "arshio12/broker-service:1.0.0"

@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 )
 
 var templateFS embed.FS
@@ -43,7 +44,9 @@ func render(w http.ResponseWriter, t string) {
 		return
 	}
 
-	if err := tmpl.Execute(w, nil); err != nil {
+	brokerURL := os.Getenv("BROKER_URL")
+
+	if err := tmpl.Execute(w, brokerURL); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

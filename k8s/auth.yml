@@ -23,4 +23,16 @@ spec:
 
 ---
 
+apiVersion: v1
+kind: Service
+metadata:
+  name: authentication-service
+spec:
+  selector:
+    app: authentication-service
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: main-port
+      protocol: TCP
 

@@ -20,4 +20,16 @@ spec:
 
 ---
 
+apiVersion: v1
+kind: Service
+metadata:
+  name: broker-service
+spec:
+  selector:
+    name: broker-service
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: main-port
+      protocol: TCP
 

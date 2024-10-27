@@ -29,7 +29,7 @@ metadata:
   name: broker-service
 spec:
   selector:
-    name: broker-service
+    app: broker-service
   ports:
     - port: 8080
       targetPort: 8080

@@ -25,7 +25,7 @@ metadata:
   name: rabbitmq
 spec:
   selector:
-    name: rabbitmq
+    app: rabbitmq
   ports:
     - port: 5672
       targetPort: 5672

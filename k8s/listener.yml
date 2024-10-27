@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: listener-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: listener-service
+  template:
+    metadata:
+      labels:
+        app: listener-service
+    spec:
+      containers:
+        - name: listener-service
+          image: "arshio12/listener-service:1.0.0"
+          envFrom:
+            - configMapRef:
+                name: listener-env
+
+
+---
+
+apiVersion: v1

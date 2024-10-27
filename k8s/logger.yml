@@ -15,3 +15,10 @@ spec:
       containers:
         - name: logger-service
           image: "arshio12/logger-service:1.0.0"
+          envFrom:
+            - configMapRef:
+                name: logger-env
+          ports:
+            - containerPort: 8080
+            - containerPort: 5001
+            - containerPort: 50001

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mail-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mail-service
+  template:
+    metadata:
+      labels:
+        app: mail-service
+    spec:
+      containers:
+        - name: mail-service
+          image: "arshio12/mailer-service:1.0.0"
+          envFrom:
+            - configMapRef:
+                name: mailer-env
+          ports:
+            - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service

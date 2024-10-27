@@ -1,0 +1,11 @@
+services:
+  postgres:
+    image: "postgres:latest"
+    ports:
+      - "5433:5432"
+    deploy:
+      mode: global
+    env_file:
+      - ./auth/.env
+    volumes:
+      - ../db-data/postgres/:/var/lib/postgresql/data/

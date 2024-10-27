@@ -25,3 +25,13 @@ spec:
 
 apiVersion: v1
 kind: Service
+metadata:
+  name: mail-service
+spec:
+  selector:
+    app: mail-service
+  ports:
+    - port: 8080
+      name: main-port
+      protocol: TCP
+      targetPort: 8080

@@ -1,10 +1,7 @@
 package data
 
 import (
-	"context"
 	"database/sql"
-	"errors"
-	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
@@ -18,201 +15,69 @@ func NewPostgresTestRepository(db *sql.DB) *PostgresTestRepository {
 	}
 }
 
+// GetAll returns a slice of all users, sorted by last name
 func (u *PostgresTestRepository) GetAll() ([]*User, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	users := []*User{}
 
-	defer cancel()
-
-	query := `SELECT * FROM users order by last_name`
-
-	rows, err := db.QueryContext(ctx, query)
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer rows.Close()
-
-	var users []*User
-	for rows.Next() {
-		var user User
-
-		err = rows.Scan(
-			&user.ID,
-			&user.Email,
-			&user.FirstName,
-			&user.LastName,
-			&user.Password,
-			&user.Active,
-			&user.CreatedAt,
-			&user.UpdatedAt,
-		)
-		if err != nil {
-			return nil, err
-		}
-
-		users = append(users, &user)
-	}
-
-	return users, err
-
+	return users, nil
 }
 
+// GetByEmail returns one user by email
 func (u *PostgresTestRepository) GetByEmail(email string) (*User, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
-
-	defer cancel()
-
-	query := `SELECT * FROM users WHERE email = ?`
-
-	row := db.QueryRowContext(ctx, query, email)
-	var user User
-
-	err := row.Scan(
-		&user.ID,
-		&user.Email,
-		&user.FirstName,
-		&user.LastName,
-		&user.Password,
-		&user.Active,
-		&user.CreatedAt,
-		&user.UpdatedAt,
-	)
-	if err != nil {
-		return nil, err
+	user := User{
+		ID:        1,
+		FirstName: "First",
+		LastName:  "Last",
+		Email:     "me@here.com",
+		Password:  "",
+		Active:    1,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
 	}
 
-	return &user, err
-
+	return &user, nil
 }
 
-func (u *PostgresTestRepository) GetById(id int) (*User, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
-
-	defer cancel()
-
-	query := `SELECT * FROM users WHERE id = ?`
-
-	row := db.QueryRowContext(ctx, query, id)
-
-	var user User
-
-	err := row.Scan(
-		&user.ID,
-		&user.Email,
-		&user.FirstName,
-		&user.LastName,
-		&user.Password,
-		&user.Active,
-		&user.CreatedAt,
-		&user.UpdatedAt,
-	)
-	if err != nil {
-		return nil, err
+// GetOne returns one user by id
+func (u *PostgresTestRepository) GetOne(id int) (*User, error) {
+	user := User{
+		ID:        1,
+		FirstName: "First",
+		LastName:  "Last",
+		Email:     "me@here.com",
+		Password:  "",
+		Active:    1,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
 	}
 
-	return &user, err
+	return &user, nil
 }
 
+// Update updates one user in the database, using the information
+// stored in the receiver u
 func (u *PostgresTestRepository) Update(user User) error {
-	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
-
-	defer cancel()
-
-	query := `UPDATE users SET 
-                 email = ?,
-                 first_name = ?,
-                 last_name = ?,
-                 user_active = ?,
-                 updated_at = ?
-             where id = ?
-             `
-
-	_, err := db.ExecContext(ctx, query,
-		user.Email,
-		user.FirstName,
-		user.LastName,
-		user.Active,
-		time.Now(),
-		user.ID,
-	)
-
-	return err
+	return nil
 }
 
-// Delete delete by User.ID
-func (u *PostgresTestRepository) Delete(id int) error {
-	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
-
-	defer cancel()
-
-	query := `DELETE FROM users WHERE id = ?`
-
-	_, err := db.ExecContext(ctx, query, id)
-
-	return err
+// DeleteByID deletes one user from the database, by ID
+func (u *PostgresTestRepository) DeleteByID(id int) error {
+	return nil
 }
 
+// Insert inserts a new user into the database, and returns the ID of the newly inserted row
 func (u *PostgresTestRepository) Insert(user User) (int, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
-
-	defer cancel()
-
-	hashedPass, err := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
-	if err != nil {
-		return 0, err
-	}
-
-	query := `INSERT INTO users (email, first_name, last_name, password, user_active, created_at, updated_at)
-		VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id`
-
-	var newID int
-	row := db.QueryRowContext(ctx, query,
-		user.Email,
-		user.FirstName,
-		user.LastName,
-		hashedPass,
-		user.Active,
-		time.Now(),
-		time.Now(),
-	)
-
-	err = row.Scan(&newID)
-
-	return newID, err
+	return 2, nil
 }
 
-func (u *PostgresTestRepository) ChangePassword(password string, user User) error {
-	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
-
-	defer cancel()
-
-	hashedPass, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	if err != nil {
-		return err
-	}
-
-	query := `UPDATE users SET password = ? where id = ?`
-
-	_, err = db.ExecContext(ctx, query, hashedPass, user.ID)
-
-	return err
-
+// ResetPassword is the method we will use to change a user's password.
+func (u *PostgresTestRepository) ResetPassword(password string, user User) error {
+	return nil
 }
 
-func (u *PostgresTestRepository) PasswordsMatches(plainPassword string, user User) (bool, error) {
-	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(plainPassword))
-
-	if err != nil {
-		switch {
-
-		case errors.Is(err, bcrypt.ErrMismatchedHashAndPassword):
-			return false, nil
-
-		default:
-			return false, err
-		}
-	}
-
+// PasswordMatches uses Go's bcrypt package to compare a user supplied password
+// with the hash we have stored for a given user in the database. If the password
+// and hash match, we return true; otherwise, we return false.
+func (u *PostgresTestRepository) PasswordMatches(plainText string, user User) (bool, error) {
 	return true, nil
 }

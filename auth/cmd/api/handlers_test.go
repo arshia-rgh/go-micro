@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -21,6 +22,24 @@ func NewTestClient(fn RoundTripFunc) *http.Client {
 }
 
 func Test_Authenticate(t *testing.T) {
+
+	jsonToReturn := `
+	
+{
+	"error": "false",
+	"message": "some message"
+}
+`
+
+	client := NewTestClient(func(request *http.Request) *http.Response {
+		return &http.Response{
+			StatusCode: http.StatusOK,
+			Body:       io.NopCloser(bytes.NewBufferString(jsonToReturn)),
+			Header:     make(http.Header),
+		}
+	})
+	testApp.Client = client
+
 	postBody := map[string]interface{}{
 		"email":    "me@here.com",
 		"password": "verysecret",

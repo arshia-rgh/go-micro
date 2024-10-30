@@ -8,5 +8,5 @@ type Repository interface {
 	Delete(id int) error
 	Insert(user User) (int, error)
 	ChangePassword(password string, user User) error
-	PasswordMatches(plainText string, user User) (bool, error)
+	PasswordsMatches(plainPassword string, user User) (bool, error)
 }

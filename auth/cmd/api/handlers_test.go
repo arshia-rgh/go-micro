@@ -14,6 +14,12 @@ func (f RoundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
 	return f(req), nil
 }
 
+func NewTestClient(fn RoundTripFunc) *http.Client {
+	return &http.Client{
+		Transport: fn,
+	}
+}
+
 func Test_Authenticate(t *testing.T) {
 	postBody := map[string]interface{}{
 		"email":    "me@here.com",

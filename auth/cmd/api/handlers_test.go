@@ -8,6 +8,12 @@ import (
 	"testing"
 )
 
+type RoundTripFunc func(request *http.Request) *http.Response
+
+func (f RoundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
+	return f(req), nil
+}
+
 func Test_Authenticate(t *testing.T) {
 	postBody := map[string]interface{}{
 		"email":    "me@here.com",

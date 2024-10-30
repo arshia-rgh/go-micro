@@ -12,9 +12,19 @@ const dbTimeout = time.Second * 3
 
 var db *sql.DB
 
-type Models struct {
-	User User
+type PostgresRepository struct {
+	Conn *sql.DB
 }
+
+func NewPostgresRepository(db *sql.DB) *PostgresRepository {
+	return &PostgresRepository{
+		Conn: db,
+	}
+}
+
+//type Models struct {
+//	User User
+//}
 
 type User struct {
 	ID        int       `json:"id"`
@@ -27,12 +37,12 @@ type User struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func New(dbPool *sql.DB) Models {
-	db = dbPool
-
-	return Models{User: User{}}
-
-}
+//func New(dbPool *sql.DB) Models {
+//	db = dbPool
+//
+//	return Models{User: User{}}
+//
+//}
 
 func (u *User) GetAll() ([]*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
